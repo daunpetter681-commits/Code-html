@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Order Bakpao</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    padding: 20px;
+}
+.container {
+    max-width: 420px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    margin: auto;
+}
+h2 {
+    text-align: center;
+    color: #d35400;
+}
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 9px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+textarea {
+    resize: none;
+}
+.btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-wa {
+    background: #25d366;
+    color: white;
+}
+.btn-wa:hover {
+    background: #1ebe5d;
+}
+.btn-gps {
+    background: #3498db;
+    color: white;
+}
+.btn-gps:hover {
+    background: #2c80b4;
+}
+.note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🥟 Pre-Order Bakpao</h2>
+
+    <label>Nama Pemesan</label>
+    <input type="text" id="nama" placeholder="Nama kamu">
+
+    <label>Nomor WhatsApp</label>
+    <input type="text" id="wa" placeholder="08xxxxxxxxxx">
+
+    <label>Varian Bakpao</label>
+    <select id="varian">
+        <option>Ayam</option>
+        <option>Cokelat</option>
+        <option>Kacang Hijau</option>
+        <option>Campur</option>
+    </select>
+
+    <label>Jumlah Pesanan</label>
+    <input type="number" id="jumlah" placeholder="Contoh: 10">
+
+    <label>Link Lokasi Google Maps</label>
+    <input type="text" id="maps" placeholder="Tempel link lokasi rumah kamu">
+    <div class="note">
+        📍 Buka <strong>:contentReference[oaicite:0]{index=0}</strong> → Bagikan → Salin link  
+        <br>Atau gunakan tombol lokasi saat ini di bawah
+    </div>
+
+    <button type="button" class="btn btn-gps" onclick="ambilLokasi()">
+        📍 Gunakan Lokasi Saat Ini
+    </button>
+
+    <label>Catatan Tambahan</label>
+    <textarea id="catatan" rows="3" placeholder="Fresh / Frozen, patokan rumah, dll"></textarea>
+
+    <button class="btn btn-wa" onclick="kirimWA()">Pesan via WhatsApp</button>
+</div>
+
+<script>
+function ambilLokasi() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                var linkMaps = "https://www.google.com/maps?q=" + lat + "," + lng;
+                document.getElementById("maps").value = linkMaps;
+                alert("Lokasi berhasil diambil 📍");
+            },
+            function() {
+                alert("Gagal mengambil lokasi. Silakan tempel link Google Maps manual 🙏");
+            }
+        );
+    } else {
+        alert("Browser tidak mendukung GPS.");
+    }
+}
+
+function kirimWA() {
+    var nama = document.getElementById("nama").value;
+    var wa = document.getElementById("wa").value;
+    var varian = document.getElementById("varian").value;
+    var jumlah = document.getElementById("jumlah").value;
+    var maps = document.getElementById("maps").value;
+    var catatan = document.getElementById("catatan").value;
+
+    if(nama === "" || wa === "" || jumlah === "" || maps === "") {
+        alert("Mohon lengkapi data yang wajib diisi 🙏");
+        return;
+    }
+
+    var nomorOwner = "6288287130420"; // GANTI NOMOR WA OWNER
+
+    var pesan =
+        "Halo, saya mau pesan bakpao:%0A%0A" +
+        "Nama: " + nama + "%0A" +
+        "WA: " + wa + "%0A" +
+        "Varian: " + varian + "%0A" +
+        "Jumlah: " + jumlah + "%0A" +
+        "Lokasi: " + maps + "%0A" +
+        "Catatan: " + catatan;
+
+    window.open("https://wa.me/" + nomorOwner + "?text=" + pesan, "_blank");
+}
+</script>
+
+</body>
+</html>
